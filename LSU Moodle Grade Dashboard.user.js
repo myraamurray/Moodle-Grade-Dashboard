@@ -8,6 +8,7 @@ const styles = `
 
 body {
   background: #f0f4f8; 
+  margin: 0;
 }
 .grade-dashboard-button {
   position: fixed;
@@ -20,13 +21,15 @@ body {
 
 #myra-dashboard {
   font-family: 'Roboto', sans-serif;
+  width: 75%;
+  margin: 0 auto;
+
 }
 
 .dashboard-shell {
-  width: 390px;
-  margin: 30px auto;
+  margin: 120px auto 40px;
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 12px 35px rgba(0,0,0,.16);
 }
@@ -73,11 +76,11 @@ body {
 }
 
 .class-row {
-  display: grid;
-  grid-template-columns: 1fr auto 18px;
+  display: flex;
   align-items: center;
-  min-height: 92px;
-  padding: 14px 18px;
+  justify-content: space-between;
+  min-height: 120px;
+  padding: 24px 42px;
   border-bottom: 1px solid #e5e5e5;
   background: white;
 }
@@ -97,15 +100,20 @@ body {
 
 .class-arrow {
   color: #c6c6c6;
-  font-size: 30px;
+  font-size: 42px;
   font-weight: 300;
+}
+
+.class-info {
+  flex: 1;
+  max-width: 75%;
 }
 
 .class-grade {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  margin-right: 12px;
+  align-items: center;
+  gap: 18px;
+  margin-left: 32px;
 }
 
 .grade-letter {
@@ -167,6 +175,7 @@ document.head.appendChild(styleSheet);
     const dashboard = document.createElement("div");
     dashboard.id = "myra-dashboard";
 
+    /*CHANGE ACTIVE SEMESTER TITLE HERE*/
     dashboard.innerHTML = `
       <div class="dashboard-shell">
         <div class="dashboard-header">
