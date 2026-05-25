@@ -95,19 +95,31 @@ body {
   margin-top: 6px;
 }
 
-.class-grade {
-  text-align: right;
-  margin-right: 12px;
-  font-size: 24px;
-  font-weight: 500;
-  color: #222;
-  line-height: 1;
-}
-
 .class-arrow {
   color: #c6c6c6;
   font-size: 30px;
   font-weight: 300;
+}
+
+.class-grade {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 12px;
+}
+
+.grade-letter {
+  font-size: 34px;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1;
+}
+
+.grade-percent {
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #9ca3af;
 }
 `;
 
@@ -172,25 +184,37 @@ document.head.appendChild(styleSheet);
 
     const cardArea = dashboard.querySelector("#myra-grade-cards");
 
-    classes.forEach(cells => {
-      const course = cells[0] || "course";
-      const grade = cells[cells.length - 1] || "not posted";
+   classes.forEach(cells => {
+    const course = cells[0] || "course";
+    const rawGrade = String(cells[cells.length - 1] || "-");
 
-      const card = document.createElement("div");
-      card.className = "class-row";
+    let letterGrade = "-";
+    let percentGrade = "";
 
-      card.innerHTML = `
-        <div class="class-info">
-          <div class="class-name">${course}</div>
-        </div>
+    if (rawGrade.includes("%")) {
+      percentGrade = rawGrade;
+    } else {
+      letterGrade = rawGrade;
+    }
 
-        <div class="class-grade">${grade}</div>
+    const card = document.createElement("div");
+    card.className = "class-row";
 
-        <div class="class-arrow">›</div>
-      `;
+    card.innerHTML = `
+      <div class="class-info">
+        <div class="class-name">${course}</div>
+      </div>
 
-      cardArea.appendChild(card);
-    });
+      <div class="class-grade">
+        <div class="grade-letter">${letterGrade}</div>
+        <div class="grade-percent">${percentGrade}</div>
+      </div>
+
+      <div class="class-arrow">›</div>
+    `;
+
+    cardArea.appendChild(card);
+  });
 
     document.body.prepend(dashboard);
   }
