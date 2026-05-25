@@ -98,12 +98,6 @@ body {
   margin-top: 6px;
 }
 
-.class-arrow {
-  color: #c6c6c6;
-  font-size: 42px;
-  font-weight: 300;
-}
-
 .class-info {
   flex: 1;
   max-width: 75%;
@@ -218,8 +212,6 @@ document.head.appendChild(styleSheet);
         <div class="grade-letter">${letterGrade}</div>
         <div class="grade-percent">${percentGrade}</div>
       </div>
-
-      <div class="class-arrow">›</div>
     `;
 
     cardArea.appendChild(card);
