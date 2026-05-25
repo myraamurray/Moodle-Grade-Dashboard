@@ -1,10 +1,112 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>grade dashboard preview</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Moodle Grade Dashboard</title>
+  <style>
+    body {
+      background: #f0f4f8;
+      font-family: Roboto, Arial, sans-serif;
+      margin: 0;
+    }
+
+    .dashboard-shell {
+      width: min(75%, 1500px);
+      margin: 80px auto;
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(0,0,0,.16);
+    }
+
+    .dashboard-header {
+      background: #0d6682;
+      color: white;
+      padding: 18px 20px;
+      text-align: center;
+    }
+
+    .class-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 120px;
+      padding: 24px 42px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .class-name {
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .grade-letter {
+      font-size: 34px;
+      font-weight: 800;
+    }
+
+    .grade-percent {
+      color: #9ca3af;
+      font-weight: 600;
+    }
+  </style>
 </head>
+
 <body>
-  <script src="LSU Moodle Grade Dashboard.user.js"></script>
+  <div class="dashboard-shell">
+    <div class="dashboard-header">
+      <h1>classes</h1>
+      <p>for myra murray</p>
+    </div>
+
+    <div id="myra-grade-cards"></div>
+  </div>
+
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = "https://zxhotysypwtvdtzhvhzw.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_aP1oJ7GIoQgJ7PbtG9GKiQ_QqXjAZm5";
+  const supabaseClient = supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+  async function loadGrades() {
+    const { data, error } = await supabaseClient
+      .from("grades")
+      .select("*")
+      .order("id", { ascending: true });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    const cardArea = document.querySelector("#myra-grade-cards");
+    cardArea.innerHTML = "";
+
+    data.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "class-row";
+
+      card.innerHTML = `
+        <div class="class-info">
+          <div class="class-name">${item.course}</div>
+        </div>
+
+        <div class="class-grade">
+          <div class="grade-letter">${item.letter_grade || "-"}</div>
+          <div class="grade-percent">${item.percent_grade || ""}</div>
+        </div>
+
+        <div class="class-arrow">›</div>
+      `;
+
+      cardArea.appendChild(card);
+    });
+  }
+
+  loadGrades();
+</script>
 </body>
 </html>

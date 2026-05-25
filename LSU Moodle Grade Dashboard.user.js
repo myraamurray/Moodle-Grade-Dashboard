@@ -144,6 +144,48 @@ document.head.appendChild(styleSheet);
     document.body.appendChild(btn);
   }
 
+  const SUPABASE_URL = "https://zxhotysypwtvdtzhvhzw.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_aP1oJ7GIoQgJ7PbtG9GKiQ_QqXjAZm5";
+  const supabaseClient = supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+  
+     async function syncGradesToSupabase(classes) {
+    const rowsToUpload = classes.map((cells, index) => {
+    const course = cells[0] || "course";
+    const rawGrade = String(cells[cells.length - 1] || "-");
+
+    let letterGrade = "-";
+    let percentGrade = "";
+
+    if (rawGrade.includes("%")) {
+      percentGrade = rawGrade;
+    } else {
+      letterGrade = rawGrade;
+    }
+
+    return {
+      id: index + 1,
+      course: course,
+      letter_grade: letterGrade,
+      percent_grade: percentGrade,
+      updated_at: new Date().toISOString()
+    };
+  });
+
+  const { error } = await supabaseClient
+    .from("grades")
+    .upsert(rowsToUpload, { onConflict: "id" });
+
+  if (error) {
+    console.error("supabase sync failed:", error);
+  } else {
+    console.log("grades synced to supabase");
+  }
+}
+
+
   function buildDashboard() {
     if (!location.href.includes("/grade/report/overview/index.php")) return;
 
@@ -165,6 +207,25 @@ document.head.appendChild(styleSheet);
         grade.toLowerCase() !== "grade"
       );
     });
+
+
+syncGradesToSupabase(classes);
+
+
+    const exportData = classes.map(cells => {
+      const course = cells[0] || "course";
+      const rawGrade = String(cells[cells.length - 1] || "-");
+
+      return {
+        course,
+        letterGrade: rawGrade,
+        percentGrade: ""
+      };
+    });
+
+console.log(
+  JSON.stringify(exportData, null, 2)
+);
 
     const dashboard = document.createElement("div");
     dashboard.id = "myra-dashboard";
